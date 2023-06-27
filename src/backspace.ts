@@ -7,11 +7,16 @@ const EDIT_OPTIONS = {
     undoStopAfter: false,
 };
 
+// Needs to be enough to account for the gap between 'trimTrailingWhitespace' and 'onDidChangeTextDocument'
+const ACTION_DELAY = 100;
+
 //-//
 
 // Track the last selection so we know where the cursor was before a given change
 let lastSelection: vscode.Selection | null = null;
 let lastLineText: string | null = null;
+
+let erasureTimeout: NodeJS.Timeout | null = null;
 
 //-//
 
@@ -21,6 +26,7 @@ export function activate(context: vscode.ExtensionContext): void {
 function hook(context: vscode.ExtensionContext): void {
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument));
     context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(onDidChangeTextEditorSelection));
+    context.subscriptions.push(vscode.workspace.onWillSaveTextDocument(onWillSaveTextDocument));
 }
 
 //-//
@@ -99,7 +105,22 @@ async function eraseDocumentLine(doc: vscode.TextDocument, line: number): Promis
         return;
     }
 
-    await eraseEditorLine(etor, line);
+    await eraseEditorLineDelayed(etor, line);
+}
+async function eraseEditorLineDelayed(editor: vscode.TextEditor, line: number): Promise<void> {
+    // Opportunity to cancel if this was a byproduct of an automatic editor event
+
+    erasureTimeout = setTimeout(() => {
+        eraseEditorLine(editor, line);
+    }, ACTION_DELAY);
+}
+function clearErasureTimeout(): void {
+    if(erasureTimeout === null) {
+        return;
+    }
+
+    clearTimeout(erasureTimeout);
+    erasureTimeout = null;
 }
 async function eraseEditorLine(etor: vscode.TextEditor, line: number): Promise<void> {
     await etor.edit((builder: vscode.TextEditorEdit) => {
@@ -125,6 +146,12 @@ function hasSelections(event: vscode.TextEditorSelectionChangeEvent): boolean {
 function recordSelection(doc: vscode.TextDocument, selection: vscode.Selection): void {
     lastSelection = selection;
     lastLineText = doc.lineAt(selection.start.line).text;
+}
+
+//-//
+
+function onWillSaveTextDocument(event: vscode.TextDocumentWillSaveEvent): void {
+    clearErasureTimeout();
 }
 
 //-//
