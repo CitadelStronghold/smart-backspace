@@ -8,7 +8,7 @@ const EDIT_OPTIONS = {
 };
 
 // Enough to account for the gap between 'trimTrailingWhitespace' and 'onDidChangeTextDocument'
-const ACTION_DELAY = 5;
+const ACTION_DELAY = 10;
 
 //-//
 
