@@ -7,8 +7,8 @@ const EDIT_OPTIONS = {
     undoStopAfter: false,
 };
 
-// Needs to be enough to account for the gap between 'trimTrailingWhitespace' and 'onDidChangeTextDocument'
-const ACTION_DELAY = 100;
+// Enough to account for the gap between 'trimTrailingWhitespace' and 'onDidChangeTextDocument'
+const ACTION_DELAY = 1;
 
 //-//
 
@@ -42,7 +42,6 @@ async function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent): P
         await onBackspacePressed(event);
     }
 }
-
 function hasSingleChange(changes: readonly vscode.TextDocumentContentChangeEvent[]): boolean {
     return changes.length === 1;
 }
@@ -51,7 +50,7 @@ function changeIsBackspace(change: vscode.TextDocumentContentChangeEvent): boole
     return changeIsEmpty(change);
 }
 function changeIsEmpty(change: vscode.TextDocumentContentChangeEvent): boolean {
-    // We observe that all backspaces, including those of non-whitespace characters, become ''
+    // We observe that all backspaces, including those of non-whitespace characters, have empty text
 
     return change.text === '';
 }
@@ -86,16 +85,16 @@ function didEraseLine(line: number): boolean {
 function isLineEmpty(doc: vscode.TextDocument, line: number): boolean {
     const text = doc.lineAt(line).text;
 
-    return isTextEmpty(text);
+    return isTextBlank(text);
 }
 function wasLineEmpty(): boolean {
     if(lastLineText === null) {
         return false;
     }
 
-    return isTextEmpty(lastLineText);
+    return isTextBlank(lastLineText);
 }
-function isTextEmpty(text: string): boolean {
+function isTextBlank(text: string): boolean {
     return text.trim().length === 0;
 }
 
