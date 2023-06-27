@@ -19,3 +19,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [1.0.3]
 
 - Update readme
+
+## [1.0.4]
+
+- Update readme
