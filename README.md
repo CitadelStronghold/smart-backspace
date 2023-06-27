@@ -8,7 +8,7 @@ Get ready to supercharge your development process and experience the exhilaratio
 
 ## Usage
 
-Install it and see how it works!
+Install it and see it work!
 
 ## Details
 
