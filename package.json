@@ -2,14 +2,16 @@
   "name": "smart-backspace",
   "displayName": "Smart Backspace",
   "description": "Erase empty lines with a single press of backspace.",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.79.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./dist/extension.js",
   "scripts": {
     "vscode:prepublish": "npm run package",
