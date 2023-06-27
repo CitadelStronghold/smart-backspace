@@ -13,3 +13,5 @@ Install it and see it work!
 ## Details
 
 The extension monitors for backspaces and erases the current line if it is concluded that the line is empty or filled with whitespace.
+
+There is a special edge-case exclusion for backspaces introduced by the `trimTrailingWhitespace` editor option.
