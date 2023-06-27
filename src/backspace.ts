@@ -26,7 +26,7 @@ export function activate(context: vscode.ExtensionContext): void {
 function hook(context: vscode.ExtensionContext): void {
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument));
     context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(onDidChangeTextEditorSelection));
-    context.subscriptions.push(vscode.workspace.onWillSaveTextDocument(onWillSaveTextDocument));
+    context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(onDidSaveTextDocument));
 }
 
 //-//
@@ -149,7 +149,7 @@ function recordSelection(doc: vscode.TextDocument, selection: vscode.Selection):
 
 //-//
 
-function onWillSaveTextDocument(event: vscode.TextDocumentWillSaveEvent): void {
+function onDidSaveTextDocument(): void {
     clearErasureTimeout();
 }
 
