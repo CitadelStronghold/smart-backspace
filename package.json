@@ -1,9 +1,9 @@
 {
     "name": "smart-backspace",
     "displayName": "Smart Backspace",
-    "description": "Erase empty and whitespace lines with a single backspace press.",
+    "description": "Erase empty and whitespace lines with a single backspace.",
     "repository": "https://github.com/CitadelStronghold/smart-backspace",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "publisher": "Eshnek",
     "icon": "assets/icon.png",
     "engines": {

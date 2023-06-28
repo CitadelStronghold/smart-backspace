@@ -1,6 +1,6 @@
 # Smart Backspace
 
-Automatically delete empty lines with a single backspace press.
+Automatically delete empty and whitespace lines with a single backspace.
 
 Get ready to supercharge your development process and experience the exhilaration of a seamless IDE with this must-have extension!
 
