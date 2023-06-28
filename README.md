@@ -14,4 +14,4 @@ Install and see it work!
 
 The extension monitors for backspaces and erases the current line if it is concluded that the line is empty or filled with whitespace.
 
-There is a special edge-case exclusion for backspaces introduced by the `trimTrailingWhitespace` editor option.
+There is a special edge-case issue with backspaces introduced by the `trimTrailingWhitespace` editor option. If it causes a problem for you, adjust the settings of the extension. (`smartBackspace.delay`)

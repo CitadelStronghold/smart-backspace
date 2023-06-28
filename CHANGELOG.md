@@ -43,3 +43,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [1.0.9]
 
 - Up default to 50ms delay
+
+## [1.1.0]
+
+- Add setting to adjust the delay

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as config from './config';
 
 //-//
 
@@ -6,8 +7,6 @@ const EDIT_OPTIONS = {
     undoStopBefore: false,
     undoStopAfter: false,
 };
-
-const ACTION_DELAY = 50;
 
 //-//
 
@@ -112,7 +111,10 @@ function eraseEditorLineDelayed(editor: vscode.TextEditor, line: number): void {
 
     erasureTimeout = setTimeout(() => {
         eraseEditorLine(editor, line);
-    }, ACTION_DELAY);
+    }, getActionDelay());
+}
+function getActionDelay(): number {
+    return config.get('delay');
 }
 async function eraseEditorLine(etor: vscode.TextEditor, line: number): Promise<void> {
     await etor.edit((builder: vscode.TextEditorEdit) => {
