@@ -7,7 +7,6 @@ const EDIT_OPTIONS = {
     undoStopAfter: false,
 };
 
-// Enough to account for the gap between 'trimTrailingWhitespace' and 'onDidChangeTextDocument'
 const ACTION_DELAY = 10;
 
 //-//
@@ -26,12 +25,14 @@ export function activate(context: vscode.ExtensionContext): void {
 function hook(context: vscode.ExtensionContext): void {
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument));
     context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(onDidChangeTextEditorSelection));
+
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(onDidSaveTextDocument));
+    context.subscriptions.push(vscode.workspace.onWillSaveTextDocument(onWillSaveTextDocument));
 }
 
 //-//
 
-async function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent): Promise<void> {
+function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent): void {
     const { contentChanges } = event;
 
     if (!hasSingleChange(contentChanges)) {
@@ -39,7 +40,7 @@ async function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent): P
     }
 
     if (changeIsBackspace(contentChanges[0])) {
-        await onBackspacePressed(event);
+        onBackspacePressed(event);
     }
 }
 function hasSingleChange(changes: readonly vscode.TextDocumentContentChangeEvent[]): boolean {
@@ -57,7 +58,7 @@ function changeIsEmpty(change: vscode.TextDocumentContentChangeEvent): boolean {
 
 //
 
-async function onBackspacePressed(event: vscode.TextDocumentChangeEvent): Promise<void> {
+function onBackspacePressed(event: vscode.TextDocumentChangeEvent): void {
     const doc = event.document;
     const line = getBackspacedLine(event);
 
@@ -65,7 +66,7 @@ async function onBackspacePressed(event: vscode.TextDocumentChangeEvent): Promis
         return;
     }
 
-    await eraseDocumentLine(doc, line);
+    eraseDocumentLine(doc, line);
 }
 function getBackspacedLine(event: vscode.TextDocumentChangeEvent): number {
     return event.contentChanges[0]!.range.start.line;
@@ -80,7 +81,7 @@ function didEraseLine(line: number): boolean {
         return false;
     }
 
-    return lastSelection!.start.line > line;
+    return lastSelection.start.line > line;
 }
 function isLineEmpty(doc: vscode.TextDocument, line: number): boolean {
     const text = doc.lineAt(line).text;
@@ -98,28 +99,20 @@ function isTextBlank(text: string): boolean {
     return text.trim().length === 0;
 }
 
-async function eraseDocumentLine(doc: vscode.TextDocument, line: number): Promise<void> {
+function eraseDocumentLine(doc: vscode.TextDocument, line: number): void {
     const etor = getActiveEditor();
     if(!etor || etor.document !== doc) {
         return;
     }
 
-    await eraseEditorLineDelayed(etor, line);
+    eraseEditorLineDelayed(etor, line);
 }
-async function eraseEditorLineDelayed(editor: vscode.TextEditor, line: number): Promise<void> {
+function eraseEditorLineDelayed(editor: vscode.TextEditor, line: number): void {
     // Opportunity to cancel if this was a byproduct of an automatic editor event
 
     erasureTimeout = setTimeout(() => {
         eraseEditorLine(editor, line);
     }, ACTION_DELAY);
-}
-function clearErasureTimeout(): void {
-    if(erasureTimeout === null) {
-        return;
-    }
-
-    clearTimeout(erasureTimeout);
-    erasureTimeout = null;
 }
 async function eraseEditorLine(etor: vscode.TextEditor, line: number): Promise<void> {
     await etor.edit((builder: vscode.TextEditorEdit) => {
@@ -128,6 +121,15 @@ async function eraseEditorLine(etor: vscode.TextEditor, line: number): Promise<v
 
         builder.delete(new vscode.Range(delRange, lineRange.end));
     }, EDIT_OPTIONS);
+}
+
+function clearErasureTimeout(): void {
+    if(erasureTimeout === null) {
+        return;
+    }
+
+    clearTimeout(erasureTimeout);
+    erasureTimeout = null;
 }
 
 //-//
@@ -149,6 +151,9 @@ function recordSelection(doc: vscode.TextDocument, selection: vscode.Selection):
 
 //-//
 
+function onWillSaveTextDocument(): void {
+    clearErasureTimeout();
+}
 function onDidSaveTextDocument(): void {
     clearErasureTimeout();
 }
@@ -156,5 +161,5 @@ function onDidSaveTextDocument(): void {
 //-//
 
 function getActiveEditor(): vscode.TextEditor | null {
-    return vscode.window.activeTextEditor || null;
+    return vscode.window.activeTextEditor ?? null;
 }

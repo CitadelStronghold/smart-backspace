@@ -31,3 +31,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [1.0.6]
 
 - Algorithmic change
+
+## [1.0.7]
+
+- Algorithmic improvement in attempt to support `trimTrailingWhitespace` better
