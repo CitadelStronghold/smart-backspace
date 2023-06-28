@@ -3,7 +3,7 @@
   "displayName": "Smart Backspace",
   "description": "Erase empty lines with a single press of backspace.",
   "repository": "https://github.com/CitadelStronghold/smart-backspace",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "publisher": "Eshnek",
   "icon": "assets/icon.png",
   "engines": {

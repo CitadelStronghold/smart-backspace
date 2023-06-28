@@ -35,3 +35,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [1.0.7]
 
 - Algorithmic improvement in attempt to support `trimTrailingWhitespace` better
+
+## [1.0.8]
+
+- Try 20ms delay

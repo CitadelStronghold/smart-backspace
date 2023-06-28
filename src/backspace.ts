@@ -7,7 +7,7 @@ const EDIT_OPTIONS = {
     undoStopAfter: false,
 };
 
-const ACTION_DELAY = 10;
+const ACTION_DELAY = 20;
 
 //-//
 
