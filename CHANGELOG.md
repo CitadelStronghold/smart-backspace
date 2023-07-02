@@ -51,3 +51,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [1.1.1]
 
 - Update description
+
+## [1.1.3]
+
+- Improve handling of backspace when deleting multiple lines, by disabling smart backspace in that case

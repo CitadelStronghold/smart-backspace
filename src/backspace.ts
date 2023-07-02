@@ -34,7 +34,10 @@ function hook(context: vscode.ExtensionContext): void {
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent): void {
     const { contentChanges } = event;
 
-    if (!hasSingleChange(contentChanges)) {
+    if (
+        !hasSingleChange(contentChanges) ||
+        !changeIsSingular(contentChanges[0])
+    ) {
         return;
     }
 
@@ -44,6 +47,9 @@ function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent): void {
 }
 function hasSingleChange(changes: readonly vscode.TextDocumentContentChangeEvent[]): boolean {
     return changes.length === 1;
+}
+function changeIsSingular(change: vscode.TextDocumentContentChangeEvent): boolean {
+    return change.range.isSingleLine;
 }
 
 function changeIsBackspace(change: vscode.TextDocumentContentChangeEvent): boolean {
